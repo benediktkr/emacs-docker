@@ -14,4 +14,5 @@ RUN ./autogen.sh && \
     make install
 WORKDIR /emacs
 RUN rm -rf /build
+COPY ./.emacs /root/.emacs
 ENTRYPOINT ["/emacs/bin/emacs"]
