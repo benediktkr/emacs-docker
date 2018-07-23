@@ -1,6 +1,6 @@
 # emacs-docker
 
-Currently no build system behind this.
+Currently no build system behind this. Images are manually maintained at [hub.docker.com/r/benediktkr/emacs-docker](https://hub.docker.com/r/benediktkr/emacs-docker/).
 
 The `Dockerfile` in `git/` will use an Ubuntu-based image to build the latest version of Emacs from git.
 
