@@ -10,8 +10,9 @@ DIST="$(pwd)/dist"
 
 (
     cd amzn/
-    docker build --build-arg PREFIX=$PREFIX --build-arg VERSION=$VERSION -t build-emacs-amzn .
+    wget https://ftp.gnu.org/pub/gnu/emacs/emacs-${VERSION}.tar.xz
 
+    docker build --build-arg PREFIX=$PREFIX --build-arg VERSION=$VERSION -t build-emacs-amzn .
     docker run --rm -v $DIST:/emacs/dist -it build-emacs-amzn $1
 )
 
