@@ -7,11 +7,9 @@ ARG CPU_COUNT=8
 RUN mkdir /emacs && mkdir /emacs/target && mkdir /emacs/build/ && \
     apt-get update && \
     apt-get install -y wget build-essential autoconf texinfo gnutls-bin \
-                       libgnutls28-dev pkg-config libncurses-dev patchelf
-
-# installing fpm
-RUN apt-get install -y ruby ruby-dev rubygems build-essential && \
-    gem install --no-document fpm
+                       libgnutls28-dev pkg-config libncurses-dev patchelf \
+                       ruby ruby-dev rubygems build-essential && \
+                       gem install --no-document fpm	
 
 # untars !
 ADD emacs-${VERSION}.tar.xz /emacs
