@@ -3,27 +3,19 @@
 set -e
 set -x
 
-if [ "$1" = "shell" ]; then
-    exec -l /bin/bash
-elif [ "$1" = "emacs" ]; then
+if [ "$1" = "emacs" ]; then
     exec $EMACSROOT/bin/emacs
 elif [ ! "$1" = "package" ]; then
-    echo "invalid args: '$1'"
-    exit 1
+    exec $@
 fi
 
 if [ -z "$VERSION" ]; then
     echo "varible VERSION must be set!"
     exit 1
 fi
-if [ -z "$PREFIX" ]; then
-    PREFIX=/emacs/target
-fi
 
 CPU_COUNT=$(grep "processor" -c /proc/cpuinfo)
-DIST=/emacs/dist
-TARGET=$PREFIX
-mkdir -p $TARGET
+BUILDS=/emacs/amzn
 
 # we compiled emacs with runpath set to '$ORIGIN/../lib' ($ORIGIN is a
 # special token so we can specify a location relative to the
@@ -40,20 +32,14 @@ cp /usr/lib64/libgnutls.so.26 $TARGET/lib/
 
 # in the output we see that the binary is dynamically linking the
 # files we copied
-ldd $TARGET/bin/emacs
+ldd $PREFIX/bin/emacs
 
-mkdir -p $DIST/amzn
+mkdir -p $BUILDS
+
 # make a tarball
 (
-    rm $DIST/amzn/czemacs-${VERSION}.tar.gz || true
-    cd $TARGET
+    rm $BUILDS/czemacs-${VERSION}.tar.gz || true
 
-    tar -cf $DIST/amzn/czemacs-${VERSION}.tar.gz .
-)
-
-# copy the compiled $TARGET
-(
-    rm -rf $DIST/amzn/czemacs-${VERSION} || true
-    mkdir -p $DIST/amzn/czemacs-${VERSION}
-    cp -r $TARGET/* $DIST/amzn/czemacs-${VERSION}/
+    cd $PREFIX
+    tar -czf $BUILDS/czemacs-${VERSION}.tar.gz *
 )
