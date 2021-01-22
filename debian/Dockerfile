@@ -12,7 +12,7 @@ RUN mkdir -p /emacs/target && \
     apt-get update && \
     apt-get install -y wget build-essential autoconf texinfo gnutls-bin \
                        libgnutls28-dev pkg-config libncurses-dev patchelf \
-                       ruby ruby-dev rubygems build-essential && \
+                       ruby ruby-dev rubygems build-essential git && \
                        gem install --no-document fpm
 
 # untars !
