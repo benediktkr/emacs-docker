@@ -60,5 +60,9 @@ if [ ! -f emacs-${VERSION}.tar.xz ]; then
     wget -q  https://ftp.gnu.org/pub/gnu/emacs/emacs-${VERSION}.tar.xz
 fi
 
-build_debian
-build_amzn
+if [ "$1" = "debian" ]; then
+    build_debian
+fi
+if [ "$1" = "amzn" ]; then
+    build_amzn
+fi
