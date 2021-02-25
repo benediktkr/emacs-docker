@@ -65,10 +65,17 @@ pipeline {
             }
         }
 
+        stage('amzn') {
+            steps {
+                sh "docker build -f amzn/Dockerfile --build-arg PREFIX=${amzn_prefix} --build-arg VERSION=${version} -t emacs-amzn:${version}-amzn ."
+                sh "docker container create --name emacs_amzn_builder emacs-amzn:${version}-amzn "
+                sh "docker container cp emacs_amzn_builder:/emacs/amzn/ dist/"
+            }
+        }
+
         stage ('deb: build emacs') {
             steps {
                 sh "docker build -f debian/Dockerfile --build-arg PREFIX=/emacs/target --build-arg VERSION=${version} --target builder -t benediktkr/emacs:builder-${version} ."
-
                 sh "docker container create --name emacs_debian_builder benediktkr/emacs:builder-${version}"
 
                 dir('dist/') {
@@ -86,20 +93,16 @@ pipeline {
                 sh "docker push benediktkr/emacs:${version}"
             }
         }
-        stage('amzn') {
-            steps {
-                sh "docker build -f amzn/Dockerfile --build-arg PREFIX=${amzn_prefix} --build-arg VERSION=${version} -t emacs-amzn:${version}-amzn ."
-                sh "docker container create --name emacs_amzn_builder emacs-amzn:${version}-amzn "
-                sh "docker container cp emacs_amzn_builder:/emacs/amzn/ dist/"
-            }
-        }
     }
     post {
         success {
             archiveArtifacts(
-                artifacts: 'dist/*/*.tar.gz,dist/*/*.deb',
+                artifacts: 'dist/*/*.tar.gz,dist/debian/*.deb',
                 fingerprint: true
             )
+            sh "cp dist/*/*.tar.gz ${env.JENKINS_HOME}/artifacts"
+            sh "cp dist/debian/*.deb ${env.JENKINS_HOME}/artifacts"
+
         }
         cleanup {
             sh "docker container rm emacs_debian_builder || true"
