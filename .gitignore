@@ -4,3 +4,4 @@ emacs-src/
 *.tar.xz
 \#*
 .\#*
+*.tar.xz

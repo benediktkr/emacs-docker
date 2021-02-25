@@ -11,13 +11,13 @@ BUILDS=/emacs/amzn
 # executable
 #
 # Same as running
-# $ patchelf --set-rpath '$ORIGIN/../lib' $TARGET/bin/emacs
+# $ patchelf --set-rpath '$ORIGIN/../lib' $PREFIX/bin/emacs
 #
 # https://www.reddit.com/r/emacs/comments/6nnd6x/selfcontainedrelocatableportable_emacs24_for_linux/dkbbs6h/
 #
 # copying some lib files
-cp /lib64/librt.so.1 $TARGET/lib/
-cp /usr/lib64/libgnutls.so.26 $TARGET/lib/
+cp /lib64/librt.so.1 $PREFIX/lib/
+cp /usr/lib64/libgnutls.so.26 $PREFIX/lib/
 
 # in the output we see that the binary is dynamically linking the
 # files we copied
