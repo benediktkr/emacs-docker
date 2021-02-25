@@ -48,24 +48,28 @@ pipeline {
                         //   git describe --tags --abbrev=0
                         //   emacs-27.1.91
                         //
-
-                        def latest_tag = sh(
-                            script: 'git describe --tags --abbrev=0',
-                            returnStdout: true
-                        )
-                        echo latest_tag
-
+                        //
                         // the latest tag that is reachable from master
                         // seems to be the latest stable release.
                         //
                         // to get the latest minor relase instead,
                         // check out the emacs-$MAJOR branch (not tag)
 
+                        def latest_tag = sh(
+                            script: 'git describe --tags --abbrev=0',
+                            returnStdout: true
+                        )
                         version = latest_tag.split('-')[1].trim()
-                        build_exists = fileExists "${env.JENKINS_HOME}/artifacts/emacs-${version}.tar.gz"
 
                         sh "git checkout refs/tags/${latest_tag}"
                         sh "git --no-pager show --oneline -s"
+
+                        build_exists = fileExists(
+                            "${env.JENKINS_HOME}/artifacts/emacs-${version}.tar.gz"
+                        )
+
+                        echo "latest tag reachable from master: ${latest_tag}"
+                        echo "build for ${version} exists: ${build_exists}"
                     }
                 }
             }
