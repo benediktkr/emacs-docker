@@ -1,6 +1,7 @@
 def version = ""
 def amzn_prefix = "/home/bkristinsson/.local"
-def started_by_timer = currentBuild.getBuildCauses()[0]["shortDescription"].matches("Started by timer")
+def timer = currentBuild.getBuildCauses()[0]["shortDescription"].matches("Started by timer")
+def build_exists = false
 
 pipeline {
     agent any
@@ -76,6 +77,12 @@ pipeline {
         }
 
         stage('amzn') {
+            when {
+                  anyOf {
+                    expression { timer && !build_exists }
+                    expression { !timer }
+                }
+            }
             steps {
                 sh "docker build -f amzn/Dockerfile --build-arg PREFIX=${amzn_prefix} --build-arg VERSION=${version} -t emacs-amzn:${version}-amzn ."
                 sh "docker container create --name emacs_amzn_builder emacs-amzn:${version}-amzn "
@@ -84,6 +91,12 @@ pipeline {
         }
 
         stage ('deb: build emacs') {
+            when {
+                anyOf {
+                    expression { timer && !build_exists }
+                    expression { !timer }
+                }
+            }
             steps {
                 sh "docker build -f debian/Dockerfile --build-arg PREFIX=/emacs/target --build-arg VERSION=${version} --target builder -t benediktkr/emacs:builder-${version} ."
                 sh "docker container create --name emacs_debian_builder benediktkr/emacs:builder-${version}"
@@ -94,16 +107,29 @@ pipeline {
             }
         }
         stage('deb: container') {
+            when {
+                  anyOf {
+                    expression { timer && !build_exists }
+                    expression { !timer }
+                }
+            }
             steps {
                 sh "docker build -f debian/Dockerfile -t benediktkr/emacs:${version} ."
             }
         }
         stage('deb: dockerhub') {
+            when {
+                anyOf {
+                    expression { timer && !build_exists }
+                    expression { !timer }
+                }
+            }
             steps {
                 sh "docker push benediktkr/emacs:${version}"
             }
         }
     }
+
     post {
         success {
             archiveArtifacts(
