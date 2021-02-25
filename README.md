@@ -1,9 +1,15 @@
 # emacs-docker
 
 [![Build Status](https://jenkins.sudo.is/buildStatus/icon?job=ben%2Femacs-docker%2Fmaster&style=flat-square)](https://jenkins.sudo.is/job/ben/job/emacs-docker/job/master/)
+![Docker Image Version (latest by date)](https://img.shields.io/docker/v/benediktkr/emacs?style=flat-square)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/benediktkr/emacs?sort=date&style=flat-square)
 
-Currently no build system behind this. Images are manually maintained at [hub.docker.com/r/benediktkr/emacs-docker](https://hub.docker.com/r/benediktkr/emacs-docker/).
+Builds the latest stable emacs in a docker image, packages it as `.deb` and `.tar.gz` and then publishe a [docker image to Docker Hub](https://hub.docker.com/r/benediktkr/emacs-docker/) with emacs installed.
 
-The `Dockerfile` in `git/` will use an Ubuntu-based image to build the latest version of Emacs from git.
+Currently the `.deb` package has no dependencies and there isn't an apt archive hosting it either.
 
-The `Dockerfile` in `alpine/` uses an alpine-based image to run the latest alpine-provided version of Emacs, since they are up-to-date with stable. The `latest` tag points to this version.
+Dockerfiles for other docker images:
+
+ * `git/Dockerfile`: clone the emacs repo with git and build emacs.
+ * `amzn/Dockerfile`: custom Amazon Linux 1 docker build
+ * `alpine/Dockerfile`: alpine has up-to-date emacs versions.

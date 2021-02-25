@@ -3,18 +3,7 @@
 set -e
 set -x
 
-if [ "$1" = "emacs" ]; then
-    exec $EMACSROOT/bin/emacs
-elif [ ! "$1" = "package" ]; then
-    exec $@
-fi
 
-if [ -z "$VERSION" ]; then
-    echo "varible VERSION must be set!"
-    exit 1
-fi
-
-CPU_COUNT=$(grep "processor" -c /proc/cpuinfo)
 BUILDS=/emacs/amzn
 
 # we compiled emacs with runpath set to '$ORIGIN/../lib' ($ORIGIN is a

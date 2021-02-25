@@ -3,12 +3,6 @@
 set -e
 set -x
 
-if [ "$1" = "emacs" ]; then
-    exec $PREFIX/bin/emacs
-elif [ ! "$1" = "package" ]; then
-    exec $@
-fi
-
 if [ -z "$VERSION" ]; then
     echo "varible VERSION must be set!"
     exit 1
@@ -52,3 +46,6 @@ mkdir -p $BUILDS
     cp *.deb $BUILDS
 
 )
+
+
+exit 0

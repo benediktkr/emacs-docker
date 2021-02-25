@@ -1,3 +1,6 @@
 dist/
 emacs/
+emacs-src/
 *.tar.xz
+\#*
+.\#*

@@ -8,19 +8,22 @@ RUN yum -y update && \
     yum -y install devtoolset-9-gcc devtoolset-9-libgccjit-devel gnutls-devel git ncurses-devel && \
     yum -y groupinstall "Development Tools"
 
-ADD emacs-${VERSION}.tar.xz /emacs
+ADD emacs-src/ /emacs/emacs-${VERSION}
 WORKDIR /emacs/emacs-${VERSION}
 
-RUN ./configure --prefix=${PREFIX} --with-x=no CFLAGS="-I$ORIGIN/../include" --without-sound  \
-       LDFLAGS="-L$ORIGIN/lib -Wl,-rpath=\\\$\$ORIGIN/../lib"
+RUN ./autogen.sh && \
+        ./configure --prefix=${PREFIX} --with-x=no CFLAGS="-I$ORIGIN/../include" --without-sound LDFLAGS="-L$ORIGIN/lib -Wl,-rpath=\\\$\$ORIGIN/../lib"
 RUN make -j${CPU_COUNT}
 RUN make install -j${CPU_COUNT}
-
-ADD entrypoint.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/entrypoint.sh
 
 ENV VERSION ${VERSION}
 ENV PREFIX ${PREFIX}
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-CMD ["package"]
+ADD amzn/package.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/package.sh
+RUN /usr/local/bin/package.sh
+
+RUN rm -rf /emacs/emacs-${VERSION}
+RUN ${PREFIX}/bin/emacs --version
+
+CMD ["${PREFIX}/bin/emacs"]
