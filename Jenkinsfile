@@ -1,8 +1,12 @@
 def version = ""
 def amzn_prefix = "/home/bkristinsson/.local"
+def started_by_timer = currentBuild.getBuildCauses()[0]["shortDescription"].matches("Started by timer")
 
 pipeline {
     agent any
+    triggers {
+        cron('@weekly')
+    }
     options {
         timestamps()
         ansiColor("xterm")
@@ -58,6 +62,8 @@ pipeline {
                         // check out the emacs-$MAJOR branch (not tag)
 
                         version = latest_tag.split('-')[1].trim()
+                        build_exists = fileExists "${env.JENKINS_HOME}/artifacts/emacs-${version}.tar.gz"
+
                         sh "git checkout refs/tags/${latest_tag}"
                         sh "git --no-pager show --oneline -s"
                     }
