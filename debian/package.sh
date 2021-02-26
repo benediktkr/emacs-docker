@@ -67,7 +67,7 @@ mkdir -p $BUILDS
 
     DEPENDS="-d nettle-dev"
     #DEPENDS=""
-    fpm -t deb -v ${VERSION}-sudois${BUILD_NUMER} -n emacs $DEPENDS -s dir $PREFIX/=/usr/local
+    fpm -t deb -v ${VERSION} -n emacs $DEPENDS -s dir $PREFIX/=/usr/local
     cp *.deb $BUILDS
 
 )
