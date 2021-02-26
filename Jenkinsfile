@@ -119,6 +119,7 @@ pipeline {
             script {
                 if ( !skip_build ) {
                     sh "docker push benediktkr/emacs:${version}"
+                    build job: "/utils/apt", wait: false
                 }
             }
         }

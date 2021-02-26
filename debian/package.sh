@@ -27,8 +27,7 @@ cp /lib/x86_64-linux-gnu/librt.so.1 $PREFIX/lib/
 cp /lib/x86_64-linux-gnu/libtinfo.so.6 $PREFIX/lib/
 cp /usr/lib/x86_64-linux-gnu/libgnutls.so.30 $PREFIX/lib/
 
-# this doesnt seem to work on ubuntu, nettle-dev should be installed
-# as dependency
+# might not work on ubuntu
 cp /usr/lib/x86_64-linux-gnu/libnettle.so.8 $PREFIX/lib/
 cp /usr/lib/x86_64-linux-gnu/libhogweed.so.6 $PREFIX/lib/
 
@@ -66,9 +65,9 @@ mkdir -p $BUILDS
 (
     # set dependencies (check with apt)
 
-    #DEPENDS="-d nettle-dev"
-    DEPENDS=""
-    fpm -t deb -v $VERSION -n emacs $DEPENDS -s dir $PREFIX/=/usr/local
+    DEPENDS="-d nettle-dev"
+    #DEPENDS=""
+    fpm -t deb -v ${VERSION}-sudois${BUILD_NUMER} -n emacs $DEPENDS -s dir $PREFIX/=/usr/local
     cp *.deb $BUILDS
 
 )
