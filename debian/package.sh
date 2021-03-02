@@ -7,6 +7,10 @@ if [ -z "$VERSION" ]; then
     echo "varible VERSION must be set!"
     exit 1
 fi
+if [ -z "$DEBNAME" ]; then
+    echo "varible DEBNAME must be set!"
+    exit 1
+fi
 
 BUILDS=/emacs/debian
 
@@ -22,14 +26,19 @@ BUILDS=/emacs/debian
 
 echo $PREFIX
 
+## this is all commented out for now, since for me it is only on the
+## amzn specific builds that i need an executable with the libs in the
+## build.
+## this also had some weird side effects on Ubuntu.
+
 # copying some lib files
-cp /lib/x86_64-linux-gnu/librt.so.1 $PREFIX/lib/
-cp /lib/x86_64-linux-gnu/libtinfo.so.6 $PREFIX/lib/
-cp /usr/lib/x86_64-linux-gnu/libgnutls.so.30 $PREFIX/lib/
+#cp /lib/x86_64-linux-gnu/librt.so.1 $PREFIX/lib/
+#cp /lib/x86_64-linux-gnu/libtinfo.so.6 $PREFIX/lib/
+#cp /usr/lib/x86_64-linux-gnu/libgnutls.so.30 $PREFIX/lib/
 
 # might not work on ubuntu
-cp /usr/lib/x86_64-linux-gnu/libnettle.so.8 $PREFIX/lib/
-cp /usr/lib/x86_64-linux-gnu/libhogweed.so.6 $PREFIX/lib/
+#cp /usr/lib/x86_64-linux-gnu/libnettle.so.8 $PREFIX/lib/
+#cp /usr/lib/x86_64-linux-gnu/libhogweed.so.6 $PREFIX/lib/
 
 # shown as inlcuded by ldd but havent been needed so far
 # cp /lib/x86_64-linux-gnu/libanl.so.1 $PREFIX/lib/
@@ -51,6 +60,7 @@ cp /usr/lib/x86_64-linux-gnu/libhogweed.so.6 $PREFIX/lib/
 # in the output we see that the binary is dynamically linking the
 # files we copied
 ldd $PREFIX/bin/emacs
+$PREFIX/bin/emacs --version
 
 mkdir -p $BUILDS
 
@@ -64,10 +74,16 @@ mkdir -p $BUILDS
 # make a .deb with fpm
 (
     # set dependencies (check with apt)
-
     DEPENDS="-d nettle-dev"
     #DEPENDS=""
-    fpm -t deb -v ${VERSION} -n emacs $DEPENDS -s dir $PREFIX/=/usr/local
+
+    # if [ "$DEBNAME" == "emacs-nightly" ]; then
+    #     $SUFFIX="+$(date +'%Y%M%d')"
+    # else
+    #     SUFFIX=""
+    # fi
+
+    fpm -t deb -v ${VERSION} -n ${DEBNAME} ${DEPENDS} -s dir $PREFIX/=/usr/local
     cp *.deb $BUILDS
 
 )
