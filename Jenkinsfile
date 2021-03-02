@@ -101,7 +101,7 @@ pipeline {
                             sh "git checkout -f ${ref}"
 
                             debname = "emacs"
-                            docker_tag = version
+                            docker_tag = ""
                         }
                         else {
                             error("unkonwn build_mode param")
@@ -137,14 +137,14 @@ pipeline {
             when { expression { skip_build == false } }
             steps {
                 sh "docker build --pull -f debian/Dockerfile --build-arg VERSION=${version} --build-arg DEBNAME=${debname} --target final -t benediktkr/emacs:${version} ."
-                sh "docker tag benediktkr/emacs:${version} benediktkr/emacs:${docker_tag}"
 
             }
         }
         stage('amzn') {
             when {
                 expression { skip_build  == false }
-                expression { build_mode == "stable" }
+                // dont do nightly builds of czemacs
+                expression { params.build_mode == "stable" }
             }
             steps {
                 sh "docker build -f amzn/Dockerfile --build-arg PREFIX=${amzn_prefix} --build-arg VERSION=${version} -t emacs-amzn:${version}-amzn ."
@@ -177,7 +177,11 @@ pipeline {
                         ]]
                     )
 
-                    sh "docker push benediktkr/emacs:${docker_tag}"
+                    if (docker_tag != "") {
+                        sh "docker tag benediktkr/emacs:${version} benediktkr/emacs:${docker_tag}"
+                        sh "docker push benediktkr/emacs:${docker_tag}"
+                    }
+
                     sh "docker push benediktkr/emacs:${version}"
                 }
 
