@@ -25,8 +25,8 @@ pipeline {
         string(name: 'build_mode', defaultValue: 'master')
     }
     triggers {
-        parameterizedCron('''@daily%%build_mode=master
-                             @daily%%build_mode=stable''')
+        parameterizedCron('''@daily %build_mode=master
+                             @daily %build_mode=stable''')
     }
     options {
         timestamps()
