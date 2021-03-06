@@ -68,7 +68,7 @@ mkdir -p $BUILDS
 (
     cd $PREFIX
 
-    tar czf $BUILDS/emacs-${VERSION}.tar.gz *
+    tar czf $BUILDS/${DEBNAME}-${VERSION}.tar.gz *
 )
 
 # make a .deb with fpm
