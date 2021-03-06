@@ -22,10 +22,10 @@ def build_exists(String version) {
 pipeline {
     agent any
     parameters {
-        string(name: 'build_mode', defaultValue: 'master')
+        string(name: 'build_mode', defaultValue: 'nightly')
     }
     triggers {
-        parameterizedCron('''@daily %build_mode=master
+        parameterizedCron('''@daily %build_mode=nightly
                              @daily %build_mode=stable''')
     }
     options {
@@ -83,7 +83,7 @@ pipeline {
                         )
                         echo "latest tag reachable from master: ${latest_tag}"
 
-                        if (params.build_mode == "master") {
+                        if (params.build_mode == "nightly") {
                             debname = "emacs-nightly"
                             docker_tag = "latest"
                             // no `git checkout`, jenkins has already
