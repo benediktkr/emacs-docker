@@ -169,7 +169,8 @@ pipeline {
 
                     build(
                         job: "/utils/apt",
-                        wait: false,
+                        wait: true,
+                        propagate: true,
                         parameters: [[
                             $class: 'StringParameterValue',
                             name: 'filename',
