@@ -33,6 +33,14 @@ pipeline {
         ansiColor("xterm")
         disableConcurrentBuilds()
         skipDefaultCheckout()
+        buildDiscarder(
+            logRotator(
+                // daysToKeepStr: '15',
+                // artifactDaysToKeepStr: '15',
+                numToKeepStr:'30',
+                artifactNumToKeepStr: '1'
+            )
+        )
     }
     stages {
         stage('checkout') {
