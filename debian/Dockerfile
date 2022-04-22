@@ -1,4 +1,4 @@
-FROM debian:bullseye as base
+FROM debian:stable as base
 
 ARG CPU_COUNT=8
 ARG PREFIX=/emacs/target
