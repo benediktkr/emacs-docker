@@ -1,6 +1,6 @@
 # emacs-docker
 
-[![Build Status](https://jenkins.sudo.is/buildStatus/icon?job=ben%2Femacs-docker%2Fmaster&style=flat-square)](https://jenkins.sudo.is/job/ben/job/emacs-docker/job/master/)
+[![Build Status](https://jenkins.sudo.is/buildStatus/icon?job=ben%2Femacs-docker%2Fmain&style=flat-square)](https://jenkins.sudo.is/job/ben/job/emacs-docker/job/main/)
 ![Docker Image Version (latest semver)](https://img.shields.io/docker/v/benediktkr/emacs?sort=semver&style=flat-square)
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/benediktkr/emacs?sort=date&style=flat-square)
 
