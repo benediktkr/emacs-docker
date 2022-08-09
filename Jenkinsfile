@@ -1,13 +1,13 @@
 def version = ""
 def debname = "emacs"
+def dockername = "emacs"
 def amzn_prefix = "/home/benedikt.kristinsson/.local"
 def timer = currentBuild.getBuildCauses()[0]["shortDescription"].matches("Started by timer")
 def skip_build = false
-def docker_tag = "latest"
 
 def get_version() {
     return sh(
-        script: "grep AC_INIT configure.ac | awk -F',' '{print \$2}'",
+        script: "grep AC_INIT configure.ac | awk -F',' '{print \$2}' | tr -d '[] '",
         returnStdout: true
     ).trim()
 }
@@ -22,7 +22,7 @@ def build_exists(String version) {
 pipeline {
     agent any
     parameters {
-        string(name: 'build_mode', defaultValue: 'nightly')
+        string(name: 'build_mode', defaultValue: 'stable')
     }
     triggers {
         parameterizedCron('''@daily %build_mode=nightly
@@ -92,24 +92,25 @@ pipeline {
                         echo "latest tag reachable from master: ${latest_tag}"
 
                         if (params.build_mode == "nightly") {
-                            debname = "emacs-nightly"
-                            docker_tag = "latest"
                             // no `git checkout`, jenkins has already
                             // checked out master from origin.
+                            //
+                            debname = "emacs-nightly"
+                            dockername = "emacs-nightly"
                         }
                         else if (params.build_mode == "stable") {
                             def ref = "refs/tags/" + latest_tag
                             sh "git checkout -f ${ref}"
 
                             debname = "emacs"
-                            docker_tag = "stable"
+                            dockername = "emacs"
                         }
                         else if (params.build_mode.startsWith("emacs-")) {
                             def ref = "refs/tags/" + params.build_mode
                             sh "git checkout -f ${ref}"
 
                             debname = "emacs"
-                            docker_tag = ""
+                            dockername = "emacs"
                         }
                         else {
                             error("unkonwn build_mode param")
@@ -133,8 +134,8 @@ pipeline {
         stage ('deb: build emacs') {
             when { expression { skip_build  == false } }
             steps {
-                sh "docker build --pull -f debian/Dockerfile --build-arg VERSION=${version} --build-arg DEBNAME=${debname} --target builder -t benediktkr/emacs:builder-${version} ."
-                sh "docker container create --name emacs_debian_builder benediktkr/emacs:builder-${version}"
+                sh "docker build --pull -f debian/Dockerfile --build-arg VERSION=${version} --build-arg DEBNAME=${debname} --target builder -t ${dockername}:builder-${version} ."
+                sh "docker container create --name emacs_debian_builder ${dockername}:builder-${version}"
 
                 dir('dist/') {
                     sh "docker container cp emacs_debian_builder:/emacs/debian/ ."
@@ -144,7 +145,7 @@ pipeline {
         stage('deb: container') {
             when { expression { skip_build == false } }
             steps {
-                sh "docker build --pull -f debian/Dockerfile --build-arg VERSION=${version} --build-arg DEBNAME=${debname} --target final -t benediktkr/emacs:${version} ."
+                sh "docker build --pull -f debian/Dockerfile --build-arg VERSION=${version} --build-arg DEBNAME=${debname} --target final -t ${dockername}:${version} ."
 
             }
         }
@@ -172,8 +173,8 @@ pipeline {
                         fingerprint: true
                     )
 
-                    sh "cp dist/*/*.tar.gz ${env.JENKINS_HOME}/artifacts"
-                    sh "cp dist/debian/*.deb ${env.JENKINS_HOME}/artifacts"
+                    sh "cp -v dist/*/*.tar.gz ${env.JENKINS_HOME}/artifacts"
+                    sh "cp -v dist/debian/*.deb ${env.JENKINS_HOME}/artifacts"
 
                     build(
                         job: "/utils/apt",
@@ -186,12 +187,31 @@ pipeline {
                         ]]
                     )
 
-                    if (docker_tag != "") {
-                        sh "docker tag benediktkr/emacs:${version} benediktkr/emacs:${docker_tag}"
-                        sh "docker push benediktkr/emacs:${docker_tag}"
+                    // git.sudo.is
+                    //  latest
+                    sh "docker tag ${dockername}:${version} git.sudo.is/ben/${dockername}:latest"
+                    sh "docker push git.sudo.is/ben/${dockername}:latest"
+                    //  version (looks better in gitea if its pushed last)
+                    sh "docker tag ${dockername}:${version} git.sudo.is/ben/${dockername}:${version}"
+                    sh "docker push git.sudo.is/ben/${dockername}:${version}"
+
+                    // dockerhub
+                    //  version
+                    sh "docker tag ${dockername}:${version} benediktkr/${dockername}:${version}"
+                    sh "docker push benediktkr/${dockername}:${version}"
+                    //  latest (looks better on dockerhub if pushed last)
+                    sh "docker tag ${dockername}:${version} benediktkr/${dockername}:latest"
+                    sh "docker push benediktkr/${dockername}:latest"
+
+                    withCredentials([string(credentialsId: 'jenkins-registry', variable: 'SECRET')]) {
+                        def curl = "curl --user ben:${SECRET}"
+                        def gitea = "https://git.sudo.is/api/packages/ben/generic"
+                        sh "du -sh dist/debian/${debname}-${version}.tar.gz"
+                        sh "${curl} --upload-file dist/debian/${debname}-${version}.tar.gz ${gitea}/${debname}/${version}/${debname}-${version}.tar.gz"
+                        // currently only one file allowed in gitea v1.17.0: https://github.com/go-gitea/gitea/pull/20661
+                        //sh "${curl} --upload-file dist/debian/${debname}_${version}_amd64.deb ${gitea}/${debname}/${version}/${debname}_${version}_amd64.deb"
                     }
 
-                    sh "docker push benediktkr/emacs:${version}"
                 }
 
             }
@@ -200,8 +220,8 @@ pipeline {
 
             script {
                 if (! skip_build ) {
-                    sh "rm dist/*/*.tar.gz || true"
-                    sh "rm dist/debian/*.deb || true"
+                    sh "rm -v dist/*/*.tar.gz || true"
+                    sh "rm -v dist/debian/*.deb || true"
                     sh "docker container rm emacs_debian_builder || true"
                     sh "docker container rm emacs_amzn_builder || true"
                 }
