@@ -203,7 +203,7 @@ pipeline {
                     sh "docker tag ${dockername}:${version} benediktkr/${dockername}:latest"
                     sh "docker push benediktkr/${dockername}:latest"
 
-                    withCredentials([string(credentialsId: 'jenkins-registry', variable: 'SECRET')]) {
+                    withCredentials([string(credentialsId: 'gitea-user-token', variable: 'SECRET')]) {
                         def curl = "curl --user ben:${SECRET}"
                         def gitea = "https://git.sudo.is/api/packages/ben/generic"
                         sh "du -sh dist/debian/${debname}-${version}.tar.gz"
