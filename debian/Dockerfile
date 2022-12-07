@@ -47,6 +47,8 @@ ARG VERSION
 ARG DEBNAME=emacs
 ENV DEBNAME=${DEBNAME}
 
+RUN apt-get install -y libtool-bin libvterm-dev cmake
+
 COPY --from=builder /emacs/debian/${DEBNAME}_${VERSION}_amd64.deb /
 RUN dpkg -i /${DEBNAME}_${VERSION}_amd64.deb \
         && rm /${DEBNAME}_${VERSION}_amd64.deb
