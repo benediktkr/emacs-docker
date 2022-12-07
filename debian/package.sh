@@ -75,7 +75,8 @@ mkdir -p $BUILDS
 (
     # set dependencies (check with apt)
     DEPENDS="-d nettle-dev"
-    #DEPENDS=""
+    # for vterm 
+    DEPENDS="$DEPENDS -d cmake -d libtool-bin -d libvterm-dev"
 
     # if [ "$DEBNAME" == "emacs-nightly" ]; then
     #     $SUFFIX="+$(date +'%Y%M%d')"
