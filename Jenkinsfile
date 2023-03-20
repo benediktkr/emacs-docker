@@ -1,7 +1,7 @@
 def version = ""
 def debname = "emacs"
 def dockername = "emacs"
-def amzn_prefix = "/home/benedikt.kristinsson/.local"
+def amzn_prefix = "/home/benedikt.kristinsson/.local/emacs"
 def timer = currentBuild.getBuildCauses()[0]["shortDescription"].matches("Started by timer")
 def skip_build = false
 
