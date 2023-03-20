@@ -16,8 +16,23 @@ BUILDS=/emacs/amzn
 # https://www.reddit.com/r/emacs/comments/6nnd6x/selfcontainedrelocatableportable_emacs24_for_linux/dkbbs6h/
 #
 # copying some lib files
-cp /lib64/librt.so.1 $PREFIX/lib/
-cp /usr/lib64/libgnutls.so.26 $PREFIX/lib/
+
+# librt
+cp -L  /lib64/librt.so.1 $PREFIX/lib/
+cp /lib64/librt-2.26.so $PREFIX/lib/
+
+# libgnutls
+cp -L /usr/lib64/libgnutls.so.28 $PREFIX/lib/
+cp -L /usr/lib64/libgnutls.so $PREFIX/lib/
+cp -L /usr/lib64/libgnutls.so.28 $PREFIX/lib/
+cp /usr/lib64/libgnutls.so.28.43.3 $PREFIX/lib/
+
+# libtasn
+cp -L /usr/lib64/libtasn1.so.6 $PREFIX/lib/
+cp -L /usr/lib64/libtasn1.so $PREFIX/lib/
+cp /usr/lib64/libtasn1.so.6.5.3 $PREFIX/lib/
+
+# linux-vdso.so.1 $PREFIX/lib/
 
 # in the output we see that the binary is dynamically linking the
 # files we copied

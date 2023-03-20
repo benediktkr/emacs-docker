@@ -46,5 +46,5 @@ apt-get install emacs
 Dockerfiles for other docker images:
 
  * `git/Dockerfile`: clone the emacs repo with git and build emacs.
- * `amzn/Dockerfile`: custom Amazon Linux 1 docker build
+ * `amzn/Dockerfile`: custom Amazon Linux 2 build
  * `alpine/Dockerfile`: alpine has up-to-date emacs versions.
