@@ -63,6 +63,19 @@ pipeline {
                     //branches: [[name: "master"]]
                 ])
 
+                // checkout([
+                //     $class: 'GitSCM',
+                //     branches: [[name: 'refs/heads/master']],
+                //     extensions: [[
+                //         $class: 'RelativeTargetDirectory',
+                //         relativeTargetDir: 'kvdo'
+                //     ]],
+                //     doGenerateSubmoduleConfigurations: false,
+                //     userRemoteConfigs: [[
+                //         url: 'https://github.com/dm-vdo/kvdo'
+                //     ]],
+                // ])
+
                 dir('emacs-src') {
                     script {
                         // current branch should be 'master'

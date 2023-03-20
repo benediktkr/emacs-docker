@@ -5,7 +5,7 @@ ARG CPU_COUNT=8
 ARG PREFIX=/emacs/target
 
 RUN yum -y update && \
-    yum -y install devtoolset-9-gcc devtoolset-9-libgccjit-devel gnutls-devel git ncurses-devel libtasn1-devel && \
+    yum -y install devtoolset-9-gcc devtoolset-9-libgccjit-devel gnutls-devel git ncurses-devel libtasn1-devel texinfo kernel-devel libacl-devel libacl-devel && \
     yum -y groupinstall "Development Tools"
 
 ADD emacs-src/ /emacs/emacs-${VERSION}

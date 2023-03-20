@@ -38,7 +38,20 @@ cp /usr/lib64/libtasn1.so.6.5.3 $PREFIX/lib/
 # files we copied
 ldd $PREFIX/bin/emacs
 
+
 mkdir -p $BUILDS
+
+# # compile kvdo to get the linux-vdso.so.1 lib file that emacs needs
+# (
+#     find / -name "linux-vdso.so.1"
+#     cd /emacs/kvdo
+#     KERNEL=$(ls /usr/src/kernels)
+#     make -C /usr/src/kernels/${KERNEL} M=/emacs/kvdo
+#     make -C /usr/src/kernels/${KERNEL} M=/emacs/kvdo  modules_install
+
+#     echo "done"
+#     exit 1
+# )
 
 # make a tarball
 (
