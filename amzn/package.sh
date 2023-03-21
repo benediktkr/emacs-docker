@@ -3,7 +3,6 @@
 set -e
 set -x
 
-
 BUILDS=/emacs/amzn
 
 # we compiled emacs with runpath set to '$ORIGIN/../lib' ($ORIGIN is a
