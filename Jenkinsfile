@@ -188,6 +188,8 @@ pipeline {
                     sh "cp -v dist/*/*.tar.gz ${env.JENKINS_HOME}/artifacts"
                     sh "cp -v dist/debian/*.deb ${env.JENKINS_HOME}/artifacts"
 
+                    withCredentials([string(credentialsId: 'gitea-user-token', variable: 'TOKEN')]) {
+                    }
                     build(
                         job: "/utils/apt",
                         wait: true,
@@ -216,12 +218,18 @@ pipeline {
                     sh "docker push benediktkr/${dockername}:latest"
 
                     withCredentials([string(credentialsId: 'gitea-user-token', variable: 'SECRET')]) {
-                        def curl = "curl --user ben:${SECRET}"
-                        def gitea = "https://git.sudo.is/api/packages/ben/generic"
                         sh "du -sh dist/debian/${debname}-${version}.tar.gz"
-                        sh "${curl} --upload-file dist/debian/${debname}-${version}.tar.gz ${gitea}/${debname}/${version}/${debname}-${version}.tar.gz"
-                        // currently only one file allowed in gitea v1.17.0: https://github.com/go-gitea/gitea/pull/20661
-                        //sh "${curl} --upload-file dist/debian/${debname}_${version}_amd64.deb ${gitea}/${debname}/${version}/${debname}_${version}_amd64.deb"
+                        sh "du -sh dist/debian/${debname}_${version}_amd64.deb"
+
+                        // TODO: add --fail to curl, move to a separate stage.
+                        def curl = "curl --user ben:${SECRET}"
+                        def gitea = "https://git.sudo.is/api/packages/ben"
+
+                        // .tar.tz
+                        // only one file allowed in gitea v1.17.0: https://github.com/go-gitea/gitea/pull/20661
+                        sh "${curl} --upload-file dist/debian/${debname}-${version}.tar.gz ${gitea}/genric/${debname}/${version}/${debname}-${version}.tar.gz"
+                        // .deb
+                        sh "${curl} --upload-file dist/debian/${debname}_${version}_amd64.deb ${gitea}/debian/pool/all/main/upload"
                     }
 
                 }
