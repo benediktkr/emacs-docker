@@ -188,8 +188,6 @@ pipeline {
                     sh "cp -v dist/*/*.tar.gz ${env.JENKINS_HOME}/artifacts"
                     sh "cp -v dist/debian/*.deb ${env.JENKINS_HOME}/artifacts"
 
-                    withCredentials([string(credentialsId: 'gitea-user-token', variable: 'TOKEN')]) {
-                    }
                     build(
                         job: "/utils/apt",
                         wait: true,

@@ -75,7 +75,7 @@ mkdir -p $BUILDS
 (
     # set dependencies (check with apt)
     DEPENDS="-d nettle-dev"
-    # for vterm 
+    # for vterm
     DEPENDS="$DEPENDS -d cmake -d libtool-bin -d libvterm-dev"
 
     # if [ "$DEBNAME" == "emacs-nightly" ]; then
@@ -84,7 +84,7 @@ mkdir -p $BUILDS
     #     SUFFIX=""
     # fi
 
-    fpm -t deb -v ${VERSION} -n ${DEBNAME} ${DEPENDS} -s dir $PREFIX/=/usr/local
+    fpm -t deb -v ${VERSION} -n ${DEBNAME} ${DEPENDS} --url "https://git.sudo.is/ben/emacs-docker" -s dir $PREFIX/=/usr/local
     cp *.deb $BUILDS
 
 )
