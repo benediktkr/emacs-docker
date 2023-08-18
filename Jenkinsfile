@@ -227,7 +227,7 @@ pipeline {
                         // only one file allowed in gitea v1.17.0: https://github.com/go-gitea/gitea/pull/20661
                         sh "${curl} --upload-file dist/debian/${debname}-${version}.tar.gz ${gitea}/genric/${debname}/${version}/${debname}-${version}.tar.gz"
                         // .deb
-                        sh "${curl} --upload-file dist/debian/${debname}_${version}_amd64.deb ${gitea}/debian/pool/all/main/upload"
+                        sh "${curl} --upload-file dist/debian/${debname}_${version}_amd64.deb ${gitea}/debian/pool/lunar/main/upload"
                     }
 
                 }
