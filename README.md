@@ -1,47 +1,69 @@
 # emacs-docker
 
 [![Build Status](https://jenkins.sudo.is/buildStatus/icon?job=ben%2Femacs-docker%2Fmain&style=flat-square)](https://jenkins.sudo.is/job/ben/job/emacs-docker/job/main/)
-![Stable Version](https://img.shields.io/docker/v/benediktkr/emacs/latest?sort=semver&label=stable&color=blue&style=flat-square)
-![Nightly Version](https://img.shields.io/docker/v/benediktkr/emacs-nightly/latest?sort=semver&color=yellow&label=nightly&style=flat-square)
-![matrix](https://img.shields.io/static/v1?label=matrix&message=%23darkroom:sudo.is&color=purple&style=flat-square)
+[![git](https://www.sudo.is/readmes/git.sudo.is-ben.svg)](https://git.sudo.is/ben/emacs-docker)
+[![github](https://www.sudo.is/readmes/github-benediktkr.svg)](https://github.com/benediktkr/emacs-docker)
+[![matrix](https://www.sudo.is/readmes/matrix-ben-sudo.is.svg)](https://matrix.to/#/@ben:sudo.is)
+[![matrix-channel](https://www.sudo.is/readmes/matrix-darkroom-sudo-is.svg)](https://matrix.to/#/#darkroom:sudo.is)
+[![Stable Version](https://img.shields.io/docker/v/benediktkr/emacs/latest?sort=semver&label=stable&color=blue&style=flat-square)]()
+[![Nightly Version](https://img.shields.io/docker/v/benediktkr/emacs-nightly/latest?sort=semver&color=yellow&label=nightly&style=flat-square)]()
+[![BSD-3-Clause-No-Military-License](https://www.sudo.is/readmes/license-BSD-blue.svg)](LICENSE)
 
 
-Builds both the latest version from `master` in the repo (called
-`nightly` here), and looks for the newest tag (release) and builds
-that.
+Builds the latest stable version (last git tag) of the [upstream emacs repo mirrored at github](https://github.com/emacs-mirror/emacs)
+(pulled from the [`git.sudo.is/mirrors/emacs` mirror](https://git.sudo.is/mirrors/emacs)).
 
-Builds are packaged as `.deb` and `.tar.gz`, and are also published as
-[docker images](https://git.sudo.is/ben/emacs-docker/packages?q=&type=container):
+The builds are packaged as:
 
- * [`emacs:latest`](https://git.sudo.is/ben/-/packages/container/emacs/): the latest stable build
- * [`emacs-nightly:latest`](https://git.sudo.is/ben/-/packages/container/emacs-nightly/): the latest nightly build, built from the `master` branch of the upstream emacs repo
+Debian/Ubuntu `.deb` packages can be downloaded from the following repos:
+  * [`git.sudo.is/ben/-packages/debian/emacs`](https://git.sudo.is/ben/-/packages/debian/emacs)
+    ```shell
+    sudo curl https://git.sudo.is/api/packages/ben/debian/repository.key -o /etc/apt/trusted.gpg.d/gitea-ben.asc
+    echo "deb https://git.sudo.is/api/packages/ben/debian $distribution $component" | sudo tee -a /etc/apt/sources.list.d/gitea.list
+    sudo apt update
+
+    apt-get install emacs
+    ```
+
+  * [`apt.sudo.is`](https://apt.sudo.is)
+    ```shell
+    wget -q -O - https://apt.sudo.is/KEY.gpg | sudo apt-key add -
+    echo "deb https://apt.sudo.is/ /" > /etc/apt/sources.list.d/apt.sudo.is.list
+    apt-get update
+
+    apt-get install emacs
+    ```
 
 
-```shell
-# to get the latest stable version
-docker run --rm -it git.sudo.is/ben/emacs:latest
+Docker images:
 
-# to get the latest nightly build
-docker run --rm -it git.sudo.is/ben/emacs-nightly:latest
-```
+  * [`git.sudo.is/ben/emacs:latest`](https://git.sudo.is/ben/-/packages/container/emacs)
+    ```shell
+    docker run --pull --rm -it benediktkr/emacs:latest
+    ```
 
-The docker images are also pushed to dockerhub:
+  * [`benediktkr/emacs:latest`](https://hub.docker.com/r/benediktkr/emacs)
+    ```shell
+    docker run --pull --rm -it git.sudo.is/ben/emacs:latest
+    ```
 
-```shell
-docker pull benediktkr/emacs:latest
-docker pull benediktkr/emacs-nightly:latest
-```
+Tarballs are also available:
 
-The `.deb` packages are uploaded to [apt.sudo.is](https://apt.sudo.is).
+  * [`git.sudo.is/ben/-packages/generic/emacs`](https://git.sudo.is/ben/-/packages/generic/emacs/)
 
-```
-wget -q -O - https://apt.sudo.is/KEY.gpg | sudo apt-key add -
-echo "deb https://apt.sudo.is/ /" > /etc/apt/sources.list.d/apt.sudo.is.list
-apt-get update
 
-apt-get install emacs
-```
+# current status -- archival notice
 
+This occasionally breaks, and personally I am switching over to `vim` [anyway](https://web.archive.org/web/20190918054433/https://arstechnica.com/tech-policy/2019/09/richard-stallman-leaves-mit-after-controversial-remarks-on-rape/),
+so this repo and it's builds will be archived at some point in the near future. I am not aware of my builds having
+gained any sort of widespread use other than myself, but if someone wants to take over maintaining current emacs
+builds for Debian/Ubuntu, feel free to fork this repo (if you let me know, i'll link to the new maintainer before
+archiving).
+
+
+_The `nightly` builds are no longer provided. Though the code is still there if you want to build it_
+
+# repo and mirrors
 
 Dockerfiles for other docker images:
 
