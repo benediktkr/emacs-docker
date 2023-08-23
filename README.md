@@ -11,21 +11,24 @@
 
 
 Builds the latest stable version (last git tag) of the [upstream emacs repo mirrored at github](https://github.com/emacs-mirror/emacs)
-(pulled from the [`git.sudo.is/mirrors/emacs` mirror](https://git.sudo.is/mirrors/emacs)).
+(pulled from the [`git.sudo.is/mirrors/emacs` mirror](https://git.sudo.is/mirrors/emacs)). The builds are packaged [as debian/ubuntu packages](debian/package.sh),
+and docker images, and only target `amd64`.
 
-The builds are packaged as:
+# Builds
 
-Debian/Ubuntu `.deb` packages can be downloaded from the following repos:
-  * [`git.sudo.is/ben/-packages/debian/emacs`](https://git.sudo.is/ben/-/packages/debian/emacs)
+Debian/Ubuntu `.deb` packages (for `amd64`) can be downloaded from the following repos:
+
+* [`git.sudo.is/ben/-packages/debian/emacs`](https://git.sudo.is/ben/-/packages/debian/emacs)
     ```shell
     sudo curl https://git.sudo.is/api/packages/ben/debian/repository.key -o /etc/apt/trusted.gpg.d/gitea-ben.asc
-    echo "deb https://git.sudo.is/api/packages/ben/debian $distribution $component" | sudo tee -a /etc/apt/sources.list.d/gitea.list
+    echo "deb [arch=amd64] https://git.sudo.is/api/packages/ben/debian all main" | sudo tee -a /etc/apt/sources.list.d/gitea.list
     sudo apt update
 
     apt-get install emacs
     ```
 
-  * [`apt.sudo.is`](https://apt.sudo.is)
+* [`apt.sudo.is`](https://apt.sudo.is)
+
     ```shell
     wget -q -O - https://apt.sudo.is/KEY.gpg | sudo apt-key add -
     echo "deb https://apt.sudo.is/ /" > /etc/apt/sources.list.d/apt.sudo.is.list
@@ -33,7 +36,6 @@ Debian/Ubuntu `.deb` packages can be downloaded from the following repos:
 
     apt-get install emacs
     ```
-
 
 Docker images:
 
@@ -52,7 +54,7 @@ Tarballs are also available:
   * [`git.sudo.is/ben/-packages/generic/emacs`](https://git.sudo.is/ben/-/packages/generic/emacs/)
 
 
-# current status -- archival notice
+# ⚠️  Current status -- Archival notice
 
 This occasionally breaks, and personally I am switching over to `vim` [anyway](https://web.archive.org/web/20190918054433/https://arstechnica.com/tech-policy/2019/09/richard-stallman-leaves-mit-after-controversial-remarks-on-rape/),
 so this repo and it's builds will be archived at some point in the near future. I am not aware of my builds having
@@ -63,7 +65,7 @@ archiving).
 
 _The `nightly` builds are no longer provided. Though the code is still there if you want to build it_
 
-# repo and mirrors
+# Repo and mirrors
 
 Dockerfiles for other docker images:
 
