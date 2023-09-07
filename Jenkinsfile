@@ -24,9 +24,9 @@ pipeline {
     parameters {
         string(name: 'build_mode', defaultValue: 'stable')
     }
-    triggers {
-        parameterizedCron('@daily %build_mode=stable')
-    }
+    //triggers {
+    //    parameterizedCron('@daily %build_mode=stable')
+    //}
     options {
         timestamps()
         ansiColor("xterm")
