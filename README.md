@@ -62,8 +62,9 @@ gained any sort of widespread use other than myself, but if someone wants to tak
 builds for Debian/Ubuntu, feel free to fork this repo (if you let me know, i'll link to the new maintainer before
 archiving).
 
-
 _The `nightly` builds are no longer provided. Though the code is still there if you want to build it_
+
+_Jenkins cro job has been disabled._
 
 # Repo and mirrors
 
